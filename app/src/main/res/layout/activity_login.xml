@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/full_name"
+        android:hint="Full Name"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/phone_no"
+        android:inputType="number"
+        android:hint="Phone no"/>
+
+    <Button
+        android:id="@+id/send_otp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="send otp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"/>
+
+
+
+
+</LinearLayout>

@@ -8,6 +8,43 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:667880429947:android:ad3878da7927348368c5de",
+        "android_client_info": {
+          "package_name": "com.arobit.chatall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "667880429947-42p30gimnfsa4uchkjoikog78khabm6c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arobit.chatall",
+            "certificate_hash": "8a019a84bfd23f0700388982d47aeab973bff89a"
+          }
+        },
+        {
+          "client_id": "667880429947-l325qipmfarbs118ding7otqe4f6h9j1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDh4eb7h7rijV_S2aDKehjdUWTDmmCKnCg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "667880429947-l325qipmfarbs118ding7otqe4f6h9j1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:667880429947:android:419bd0cb140189a068c5de",
         "android_client_info": {
           "package_name": "com.arobit.chatapp"
