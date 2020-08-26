@@ -14,8 +14,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
@@ -45,10 +48,43 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
 
+            userInfo();
+
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "1 Error: " + e, Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    private void userInfo() {
+        rootRef.child("NewUsers").child(currentUserID)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if((snapshot.exists()) && (snapshot.hasChild("name")  && (snapshot.hasChild("image")))){
+                            String name = snapshot.child("name").getValue().toString();
+                            String status = snapshot.child("status").getValue().toString();
+                            String image = snapshot.child("image").getValue().toString();
+
+                            username.setText(name);
+                            profileStatus.setText(status);
+
+                        }else if((snapshot.exists()) && (snapshot.hasChild("name"))){
+                            String name = snapshot.child("name").getValue().toString();
+                            String status = snapshot.child("status").getValue().toString();
+
+                            username.setText(name);
+                            profileStatus.setText(status);
+                        }else {
+                            Toast.makeText(getApplicationContext(), "Set your profile info...", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
 
     private void init() {

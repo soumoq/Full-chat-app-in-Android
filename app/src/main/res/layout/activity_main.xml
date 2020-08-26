@@ -15,6 +15,13 @@
         android:text="chat" />
 
     <Button
+        android:id="@+id/create_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="create group" />
+
+    <Button
         android:id="@+id/grup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
