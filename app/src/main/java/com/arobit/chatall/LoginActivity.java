@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private FirebaseUser currentUser;
+
     private FirebaseAuth auth;
     private EditText phone, name;
     private Button sendOtp;
@@ -57,18 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         name = findViewById(R.id.full_name);
         sendOtp = findViewById(R.id.send_otp);
         auth = FirebaseAuth.getInstance();
-        currentUser = auth.getCurrentUser();
 
     }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (currentUser != null) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }
+    
 }

@@ -17,6 +17,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button verify;
     private FirebaseAuth mAuth;
     private String verificationId;
+    private DatabaseReference rootRef;
 
 
     @Override
@@ -62,6 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
         name = intent.getStringExtra("name");
         otp = findViewById(R.id.otp);
         verify = findViewById(R.id.verify);
+        rootRef = FirebaseDatabase.getInstance().getReference();
     }
 
     private void sendOtp(String phoneNumber) {
@@ -112,6 +116,9 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    String currentUserId = mAuth.getCurrentUser().getUid();
+                    rootRef.child("NewUsers").child(currentUserId).setValue("");
+
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
