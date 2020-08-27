@@ -125,7 +125,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     String currentUserId = mAuth.getCurrentUser().getUid();
-                    rootRef.child("NewUsers").child(currentUserId).setValue("");
+                    rootRef.child("NewUsers").child(currentUserId);
 
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

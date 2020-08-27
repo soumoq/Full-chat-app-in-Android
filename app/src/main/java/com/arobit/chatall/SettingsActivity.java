@@ -16,8 +16,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -46,6 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
     private DatabaseReference rootRef;
     private static int RESULT_LOAD_IMAGE = 1;
     private StorageReference userProfileImageRef;
+    private String downloadUrl = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +63,11 @@ public class SettingsActivity extends AppCompatActivity {
             update.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    updateSettings();
+                    try {
+                        updateSettings();
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             });
 
@@ -82,6 +89,19 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+    private void init() {
+        auth = FirebaseAuth.getInstance();
+        currentUserID = auth.getCurrentUser().getUid();
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        userProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
+
+        update = findViewById(R.id.update);
+        profileStatus = findViewById(R.id.status);
+        username = findViewById(R.id.user_name);
+        userProfileImage = findViewById(R.id.profile_image);
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -100,31 +120,28 @@ public class SettingsActivity extends AppCompatActivity {
 
             userProfileImage.setImageBitmap(BitmapFactory.decodeFile(picturePath));
 
-            StorageReference filePath = userProfileImageRef.child(currentUserID + ".jpg");
+            final StorageReference filePath = userProfileImageRef.child(currentUserID + ".jpg");
             filePath.putFile(selectedImage).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if (task.isSuccessful()) {
                         Toast.makeText(getApplicationContext(), "Profile image updated", Toast.LENGTH_LONG).show();
 
-                        String downloadUrl = task.getResult().getStorage().getDownloadUrl().toString();
-                        rootRef.child("NewUsers").child(currentUserID).child("image")
-                                .setValue(downloadUrl)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(getApplicationContext(), "Profile image save in database", Toast.LENGTH_LONG).show();
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), "Failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
+                        //downloadUrl = task.getResult().getStorage().getDownloadUrl().toString();
+                        filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                downloadUrl = uri.toString();
+                                Toast.makeText(getApplicationContext(), downloadUrl, Toast.LENGTH_LONG).show();
+                            }
+                        });
+
                     } else {
                         Toast.makeText(getApplicationContext(), "Profile image update failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             });
+
 
         }
     }
@@ -138,11 +155,14 @@ public class SettingsActivity extends AppCompatActivity {
                             String name = snapshot.child("name").getValue().toString();
                             String status = snapshot.child("status").getValue().toString();
                             String image = snapshot.child("image").getValue().toString();
+                            downloadUrl = image;
 
                             username.setText(name);
                             profileStatus.setText(status);
 
-                            Picasso.get().load(image).into(userProfileImage);
+                            Glide.with(SettingsActivity.this)
+                                    .load(image)
+                                    .into(userProfileImage);
 
                         } else if ((snapshot.exists()) && (snapshot.hasChild("name"))) {
                             String name = snapshot.child("name").getValue().toString();
@@ -163,17 +183,6 @@ public class SettingsActivity extends AppCompatActivity {
                 });
     }
 
-    private void init() {
-        auth = FirebaseAuth.getInstance();
-        currentUserID = auth.getCurrentUser().getUid();
-        rootRef = FirebaseDatabase.getInstance().getReference();
-        userProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
-
-        update = findViewById(R.id.update);
-        profileStatus = findViewById(R.id.status);
-        username = findViewById(R.id.user_name);
-        userProfileImage = findViewById(R.id.profile_image);
-    }
 
     private void updateSettings() {
         String name = username.getText().toString();
@@ -189,6 +198,7 @@ public class SettingsActivity extends AppCompatActivity {
             profileMap.put("uid", currentUserID);
             profileMap.put("name", name);
             profileMap.put("status", status);
+            profileMap.put("image", downloadUrl);
 
             rootRef.child("NewUsers").child(currentUserID).setValue(profileMap)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
