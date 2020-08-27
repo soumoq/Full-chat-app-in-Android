@@ -61,7 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if((snapshot.exists()) && (snapshot.hasChild("name")  && (snapshot.hasChild("image")))){
+                        if ((snapshot.exists()) && (snapshot.hasChild("name") && (snapshot.hasChild("image")))) {
                             String name = snapshot.child("name").getValue().toString();
                             String status = snapshot.child("status").getValue().toString();
                             String image = snapshot.child("image").getValue().toString();
@@ -69,13 +69,14 @@ public class SettingsActivity extends AppCompatActivity {
                             username.setText(name);
                             profileStatus.setText(status);
 
-                        }else if((snapshot.exists()) && (snapshot.hasChild("name"))){
+                        } else if ((snapshot.exists()) && (snapshot.hasChild("name"))) {
                             String name = snapshot.child("name").getValue().toString();
                             String status = snapshot.child("status").getValue().toString();
 
                             username.setText(name);
                             profileStatus.setText(status);
-                        }else {
+
+                        } else {
                             Toast.makeText(getApplicationContext(), "Set your profile info...", Toast.LENGTH_LONG).show();
                         }
                     }
