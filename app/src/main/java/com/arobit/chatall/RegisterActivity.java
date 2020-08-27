@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,7 +48,10 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     String otp1 = otp.getText().toString();
-                    verifyCode(otp1);
+                    if (TextUtils.isEmpty(otp1) && otp1.length() < 6) {
+                        Toast.makeText(getApplicationContext(), "Enter 6 digit otp", Toast.LENGTH_LONG).show();
+                    } else
+                        verifyCode(otp1);
                 }
             });
 
@@ -107,8 +111,12 @@ public class RegisterActivity extends AppCompatActivity {
     };
 
     private void verifyCode(String code) {
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-        signInWithCredential(credential);
+        try {
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+            signInWithCredential(credential);
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void signInWithCredential(PhoneAuthCredential credential) {
