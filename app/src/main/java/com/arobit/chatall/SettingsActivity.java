@@ -94,7 +94,6 @@ public class SettingsActivity extends AppCompatActivity {
         currentUserID = auth.getCurrentUser().getUid();
         rootRef = FirebaseDatabase.getInstance().getReference();
         userProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
-
         update = findViewById(R.id.update);
         profileStatus = findViewById(R.id.status);
         username = findViewById(R.id.user_name);
@@ -147,40 +146,47 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void userInfo() {
-        rootRef.child("NewUsers").child(currentUserID)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if ((snapshot.exists()) && (snapshot.hasChild("name") && (snapshot.hasChild("image")))) {
-                            String name = snapshot.child("name").getValue().toString();
-                            String status = snapshot.child("status").getValue().toString();
-                            String image = snapshot.child("image").getValue().toString();
-                            downloadUrl = image;
+        DatabaseReference userInfo = rootRef.child("NewUsers").child(currentUserID);
+        userInfo.keepSynced(true);
+        userInfo.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if ((snapshot.exists()) && (snapshot.hasChild("name") && (snapshot.hasChild("image")))) {
+                    String name = snapshot.child("name").getValue().toString();
+                    String status = snapshot.child("status").getValue().toString();
+                    String image = snapshot.child("image").getValue().toString();
+                    downloadUrl = image;
 
-                            username.setText(name);
-                            profileStatus.setText(status);
+                    username.setText(name);
+                    profileStatus.setText(status);
 
-                            Glide.with(SettingsActivity.this)
-                                    .load(image)
-                                    .into(userProfileImage);
+                    try {
+                        Glide.with(SettingsActivity.this)
+                                .load(image)
+                                .into(userProfileImage);
 
-                        } else if ((snapshot.exists()) && (snapshot.hasChild("name"))) {
-                            String name = snapshot.child("name").getValue().toString();
-                            String status = snapshot.child("status").getValue().toString();
 
-                            username.setText(name);
-                            profileStatus.setText(status);
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Set your profile info...", Toast.LENGTH_LONG).show();
-                        }
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                } else if ((snapshot.exists()) && (snapshot.hasChild("name"))) {
+                    String name = snapshot.child("name").getValue().toString();
+                    String status = snapshot.child("status").getValue().toString();
 
-                    }
-                });
+                    username.setText(name);
+                    profileStatus.setText(status);
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Set your profile info...", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 
