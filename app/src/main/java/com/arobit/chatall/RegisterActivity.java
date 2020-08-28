@@ -21,6 +21,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -125,7 +126,9 @@ public class RegisterActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     String currentUserId = mAuth.getCurrentUser().getUid();
-                    rootRef.child("NewUsers").child(currentUserId);
+                    HashMap<String, Object> msgInfoMap = new HashMap<>();
+                    msgInfoMap.put("phone", phone);
+                    rootRef.child("NewUsers").child(currentUserId).updateChildren(msgInfoMap);
 
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
