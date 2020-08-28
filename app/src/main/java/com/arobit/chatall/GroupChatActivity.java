@@ -24,9 +24,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class GroupChatActivity extends AppCompatActivity {
 
@@ -131,6 +133,7 @@ public class GroupChatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+
         groupRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -143,6 +146,7 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 if (snapshot.exists()) {
                     displayMessages(snapshot);
+
                 }
             }
 
@@ -163,19 +167,27 @@ public class GroupChatActivity extends AppCompatActivity {
         });
     }
 
+
+
+
     private void displayMessages(DataSnapshot snapshot) {
         Iterator iterator = snapshot.getChildren().iterator();
 
-        while (iterator.hasNext()) {
-            String chatDate = (String) ((DataSnapshot) iterator.next()).getValue();
-            String chatMessage = (String) ((DataSnapshot) iterator.next()).getValue();
-            String chatName = (String) ((DataSnapshot) iterator.next()).getValue();
-            String chatTime = (String) ((DataSnapshot) iterator.next()).getValue();
+
+        try {
+            while (iterator.hasNext()) {
+                String chatDate = (String) ((DataSnapshot) iterator.next()).getValue();
+                String chatMessage = (String) ((DataSnapshot) iterator.next()).getValue();
+                String chatName = (String) ((DataSnapshot) iterator.next()).getValue();
+                String chatTime = (String) ((DataSnapshot) iterator.next()).getValue();
 
 
-            message.append(chatName + " :\n" + chatMessage + " \n" + chatTime + "      " + chatDate + "\n\n\n");
+                message.append(chatName + " :\n" + chatMessage + " \n" + chatTime + "      " + chatDate + "\n\n\n");
 
-            scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
