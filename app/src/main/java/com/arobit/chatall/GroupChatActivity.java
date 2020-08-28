@@ -71,6 +71,8 @@ public class GroupChatActivity extends AppCompatActivity {
         currentUserId = auth.getCurrentUser().getUid();
         userRef = FirebaseDatabase.getInstance().getReference().child("NewUsers");
         groupRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(groupNameFrom);
+        userRef.keepSynced(true);
+        groupRef.keepSynced(true);
 
         sendMessage = findViewById(R.id.send_message);
         inputGroupMsg = findViewById(R.id.input_group_msg);
