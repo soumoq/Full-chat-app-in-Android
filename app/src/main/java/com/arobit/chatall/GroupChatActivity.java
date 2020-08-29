@@ -3,14 +3,18 @@ package com.arobit.chatall;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -132,20 +136,48 @@ public class GroupChatActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        final ArrayList<String> names = new ArrayList<>();
+        final ArrayList<String> dates = new ArrayList<>();
+        final ArrayList<String> messages = new ArrayList<>();
+        final ArrayList<String> times = new ArrayList<>();
 
+        final ListView listView = findViewById(R.id.list_view);
 
         groupRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                if (snapshot.exists()) {
-                    displayMessages(snapshot);
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
+                try {
+                    if (dataSnapshot.exists()) {
+                        //displayMessages(snapshot);
+
+                        Message message = (dataSnapshot.getValue(Message.class));
+                        String user_name = message.getName();
+                        String user_date = message.getDate();
+                        String user_time = message.getTime();
+                        String user_message = message.getMessage();
+
+                        names.add(user_name);
+                        dates.add(user_date);
+                        messages.add(user_message);
+                        times.add(user_time);
+
+
+                        MessageListView adopter = new MessageListView(GroupChatActivity.this, names, times, dates, messages);
+                        listView.setAdapter(adopter);
+
+
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "Error" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e("Error: ", e + "");
                 }
+
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 if (snapshot.exists()) {
-                    displayMessages(snapshot);
+                    //displayMessages(snapshot);
 
                 }
             }
@@ -166,8 +198,6 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
     private void displayMessages(DataSnapshot snapshot) {
