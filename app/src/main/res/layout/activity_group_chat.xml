@@ -27,7 +27,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 android:text="Group name"
-                android:textColor="#000000"
+                android:textColor="#2C3E50"
                 android:textSize="17sp" />
 
         </LinearLayout>
@@ -65,7 +65,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tool_ber"
-        android:layout_marginBottom="55dp"
+        android:layout_marginBottom="60dp"
+        android:divider="@null"
+        android:listSelector="@android:color/transparent"
         android:scrollbars="vertical" />
 
 
