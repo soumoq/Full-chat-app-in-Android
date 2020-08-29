@@ -38,9 +38,8 @@ public class GroupChatActivity extends AppCompatActivity {
 
     private ImageButton sendMessage;
     private EditText inputGroupMsg;
-    private TextView message, groupName;
+    private TextView groupName;
     private String groupNameFrom, currentUserId, currentUserName, currentDate, currentTime;
-    private ScrollView scrollView;
 
     private FirebaseAuth auth;
     private DatabaseReference userRef, groupRef, groupMsgKeyRef;
@@ -54,7 +53,6 @@ public class GroupChatActivity extends AppCompatActivity {
         groupNameFrom = intent.getStringExtra("groupName").toString();
 
         init();
-        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
         groupName.setText(groupNameFrom);
 
         getUserInfo();
@@ -65,7 +63,6 @@ public class GroupChatActivity extends AppCompatActivity {
                 String message = inputGroupMsg.getText().toString();
                 sendMessageToDB(message);
                 inputGroupMsg.setText("");
-                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
             }
         });
 
@@ -82,9 +79,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
         sendMessage = findViewById(R.id.send_message);
         inputGroupMsg = findViewById(R.id.input_group_msg);
-        message = findViewById(R.id.group_chat_text_display);
         groupName = findViewById(R.id.group_name);
-        scrollView = findViewById(R.id.scroll_view);
 
     }
 
@@ -205,17 +200,8 @@ public class GroupChatActivity extends AppCompatActivity {
 
 
         try {
-            while (iterator.hasNext()) {
-                String chatDate = (String) ((DataSnapshot) iterator.next()).getValue();
-                String chatMessage = (String) ((DataSnapshot) iterator.next()).getValue();
-                String chatName = (String) ((DataSnapshot) iterator.next()).getValue();
-                String chatTime = (String) ((DataSnapshot) iterator.next()).getValue();
 
 
-                message.append(chatName + " :\n" + chatMessage + " \n" + chatTime + "      " + chatDate + "\n\n\n");
-
-                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-            }
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }

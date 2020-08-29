@@ -9,7 +9,7 @@
         android:orientation="vertical"
         android:background="@drawable/msg_box"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="10dp">
 
         <TextView
             android:id="@+id/name"
