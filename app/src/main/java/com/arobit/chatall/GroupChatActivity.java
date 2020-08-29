@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.libizo.CustomEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ import java.util.Map;
 public class GroupChatActivity extends AppCompatActivity {
 
     private ImageButton sendMessage;
-    private EditText inputGroupMsg;
+    private CustomEditText inputGroupMsg;
     private TextView groupName;
     private String groupNameFrom, currentUserId, currentUserName, currentDate, currentTime;
 
@@ -137,6 +138,7 @@ public class GroupChatActivity extends AppCompatActivity {
         final ArrayList<String> times = new ArrayList<>();
 
         final ListView listView = findViewById(R.id.list_view);
+        final MessageListView[] adopter = new MessageListView[1];
 
         groupRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -157,8 +159,9 @@ public class GroupChatActivity extends AppCompatActivity {
                         times.add(user_time);
 
 
-                        MessageListView adopter = new MessageListView(GroupChatActivity.this, names, times, dates, messages);
-                        listView.setAdapter(adopter);
+                        adopter[0] = new MessageListView(GroupChatActivity.this, names, times, dates, messages);
+                        listView.setAdapter(adopter[0]);
+                       // scrollMyListViewToBottom();
 
 
 
@@ -192,8 +195,10 @@ public class GroupChatActivity extends AppCompatActivity {
                             times.add(user_time);
 
 
-                            MessageListView adopter = new MessageListView(GroupChatActivity.this, names, times, dates, messages);
-                            listView.setAdapter(adopter);
+                            adopter[0] = new MessageListView(GroupChatActivity.this, names, times, dates, messages);
+                            listView.setAdapter(adopter[0]);
+                           // scrollMyListViewToBottom();
+
 
 
                         }
@@ -202,6 +207,16 @@ public class GroupChatActivity extends AppCompatActivity {
                         Log.e("Error: ", e + "");
                     }
                 }
+            }
+
+            private void scrollMyListViewToBottom() {
+                listView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Select the last row so it will scroll into view...
+                        listView.setSelection(adopter[0].getCount() - 1);
+                    }
+                });
             }
 
             @Override

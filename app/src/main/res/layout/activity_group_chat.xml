@@ -42,7 +42,9 @@
         android:layout_marginBottom="60dp"
         android:divider="@null"
         android:listSelector="@android:color/transparent"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll" />
 
 
     <LinearLayout
@@ -52,13 +54,18 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom">
 
-        <EditText
+        <com.libizo.CustomEditText
             android:id="@+id/input_group_msg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:hint="Wright text..."
-            android:padding="17dp" />
+            android:padding="17dp"
+            app:libIZO_setBorderColor="#EAECEE"
+            app:libIZO_setBorderView="true"
+            app:libIZO_setCornerRadius="4dp"
+            app:libIZO_setStrokeWidth="1dp" />
 
         <ImageButton
             android:id="@+id/send_message"
