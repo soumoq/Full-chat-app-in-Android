@@ -161,6 +161,8 @@ public class GroupChatActivity extends AppCompatActivity {
                         listView.setAdapter(adopter);
 
 
+
+
                     }
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(), "Error" + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -170,10 +172,35 @@ public class GroupChatActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                if (snapshot.exists()) {
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
+                if (dataSnapshot.exists()) {
                     //displayMessages(snapshot);
 
+                    try {
+                        if (dataSnapshot.exists()) {
+                            //displayMessages(snapshot);
+
+                            Message message = (dataSnapshot.getValue(Message.class));
+                            String user_name = message.getName();
+                            String user_date = message.getDate();
+                            String user_time = message.getTime();
+                            String user_message = message.getMessage();
+
+                            names.add(user_name);
+                            dates.add(user_date);
+                            messages.add(user_message);
+                            times.add(user_time);
+
+
+                            MessageListView adopter = new MessageListView(GroupChatActivity.this, names, times, dates, messages);
+                            listView.setAdapter(adopter);
+
+
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Error" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.e("Error: ", e + "");
+                    }
                 }
             }
 
