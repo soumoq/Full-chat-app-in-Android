@@ -7,18 +7,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +34,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.libizo.CustomEditText;
 
 import java.text.SimpleDateFormat;
@@ -34,16 +45,21 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 public class GroupChatActivity extends AppCompatActivity {
 
+    private ImageView gallery;
     private ImageButton sendMessage;
     private CustomEditText inputGroupMsg;
     private TextView groupName;
     private String groupNameFrom, currentUserId, currentUserName, currentDate, currentTime;
+    private String downloadUrl = null;
 
+    private static int RESULT_LOAD_IMAGE = 1;
     private FirebaseAuth auth;
     private DatabaseReference userRef, groupRef, groupMsgKeyRef;
+    private StorageReference userProfileImageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +83,67 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
 
+        gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+            }
+        });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            String currentImageID = getSaltString();
+            final StorageReference filePath = userProfileImageRef.child(currentImageID + ".jpg");
+            filePath.putFile(selectedImage).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    Toast.makeText(getApplicationContext(), "image updated", Toast.LENGTH_LONG).show();
+                    filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            downloadUrl = uri.toString();
+                            Toast.makeText(getApplicationContext(), downloadUrl, Toast.LENGTH_LONG).show();
+                            sendMessageToDB(downloadUrl);
+                        }
+                    });
+                }
+            });
+
+
+
+
+        }
+    }
+
+    protected String getSaltString() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 18) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
+
+    }
 
     private void init() {
         auth = FirebaseAuth.getInstance();
@@ -77,10 +152,12 @@ public class GroupChatActivity extends AppCompatActivity {
         groupRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(groupNameFrom);
         userRef.keepSynced(true);
         groupRef.keepSynced(true);
+        userProfileImageRef = FirebaseStorage.getInstance().getReference().child("chat_image");
 
         sendMessage = findViewById(R.id.send_message);
         inputGroupMsg = findViewById(R.id.input_group_msg);
         groupName = findViewById(R.id.group_name);
+        gallery = findViewById(R.id.gallery);
 
     }
 
@@ -161,9 +238,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
                         adopter[0] = new MessageListView(GroupChatActivity.this, names, times, dates, messages);
                         listView.setAdapter(adopter[0]);
-                       // scrollMyListViewToBottom();
-
-
+                        // scrollMyListViewToBottom();
 
 
                     }
@@ -197,8 +272,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
                             adopter[0] = new MessageListView(GroupChatActivity.this, names, times, dates, messages);
                             listView.setAdapter(adopter[0]);
-                           // scrollMyListViewToBottom();
-
+                            // scrollMyListViewToBottom();
 
 
                         }

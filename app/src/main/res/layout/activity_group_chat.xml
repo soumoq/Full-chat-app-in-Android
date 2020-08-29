@@ -34,6 +34,7 @@
 
     </LinearLayout>
 
+
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
@@ -54,6 +55,15 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom">
 
+        <ImageView
+            android:id="@+id/gallery"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/ic_baseline_image_24" />
+
+
         <com.libizo.CustomEditText
             android:id="@+id/input_group_msg"
             android:layout_width="match_parent"
@@ -61,6 +71,7 @@
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:hint="Wright text..."
+            android:inputType="textLongMessage"
             android:padding="17dp"
             app:libIZO_setBorderColor="#EAECEE"
             app:libIZO_setBorderView="true"

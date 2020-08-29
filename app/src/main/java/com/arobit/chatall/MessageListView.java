@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -65,18 +68,36 @@ public class MessageListView extends ArrayAdapter<String> {
                 TextView userDate = rowView.findViewById(R.id.date);
                 TextView userMessage = rowView.findViewById(R.id.message);
                 LinearLayout msgBox = rowView.findViewById(R.id.message_box);
+                ImageView userImage = rowView.findViewById(R.id.user_img);
 
                 //RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)msgBox.getLayoutParams();
                 //params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 if (temp_name[0].equals(user_name.get(position))) {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)msgBox.getLayoutParams();
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) msgBox.getLayoutParams();
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 }
+
 
                 userName.setText(user_name.get(position));
                 userTime.setText(user_time.get(position));
                 userDate.setText(user_date.get(position));
-                userMessage.setText(user_message.get(position));
+
+                boolean isValid = URLUtil.isValidUrl(user_message.get(position));
+
+                if (isValid) {
+                    try {
+                        userImage.setVisibility(View.VISIBLE);
+                        userMessage.setVisibility(View.GONE);
+                        Glide.with(getContext())
+                                .load(user_message.get(position))
+                                .into(userImage);
+
+
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } else
+                    userMessage.setText(user_message.get(position));
 
             }
 
