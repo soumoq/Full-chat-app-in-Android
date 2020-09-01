@@ -24,11 +24,17 @@ android {
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+
+    implementation 'com.android.volley:volley:1.1.1'
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+    implementation 'com.google.firebase:firebase-analytics:17.5.0'
     implementation 'com.libizo:customedittext:1.0.6'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'pub.devrel:easypermissions:3.0.0'
@@ -47,4 +53,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

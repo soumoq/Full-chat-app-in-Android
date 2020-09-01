@@ -105,7 +105,7 @@ public class GroupsActivity extends AppCompatActivity {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     String groupPhoneNo = null;
                                     String user_id = auth.getCurrentUser().getUid();
-                                    Toast.makeText(getApplicationContext(), user_id, Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(getApplicationContext(), user_id, Toast.LENGTH_LONG).show();
                                     if (snapshot.child(user_id).exists())
                                         groupPhoneNo = snapshot.child(user_id).getValue().toString();
 
