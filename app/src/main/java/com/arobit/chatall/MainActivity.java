@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             if (getIntent().hasExtra("category")){
-                Intent intent = new Intent(MainActivity.this,MainActivity.class);
+                Intent intent = new Intent(MainActivity.this,GroupsActivity.class);
                 intent.putExtra("category",getIntent().getStringExtra("category"));
                 intent.putExtra("brandId",getIntent().getStringExtra("brandId"));
                 startActivity(intent);
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    sendNotification();
+                    //sendNotification();
                     startActivity(new Intent(getApplicationContext(), GroupsActivity.class));
                 }
             });

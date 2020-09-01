@@ -16,6 +16,8 @@ import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
+
+
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -24,6 +26,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String body = remoteMessage.getNotification().getBody();
 
         Map<String, String> extraData = remoteMessage.getData();
+
+
+
 
         String brandId = extraData.get("brandId");
         String category = extraData.get("category");
@@ -36,14 +41,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Intent intent;
         if (category.equals("shoes")) {
-            intent = new Intent(this, ReceiveNotificationActivity.class);
+            intent = new Intent(this, GroupsActivity.class);
 
         } else {
-            intent = new Intent(this, ReceiveNotificationActivity.class);
+            intent = new Intent(this, GroupsActivity.class);
 
         }
-        intent.putExtra("brandId", brandId);
-        intent.putExtra("category", category);
+        //intent.putExtra("brandId", brandId);
+        //intent.putExtra("category", category);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

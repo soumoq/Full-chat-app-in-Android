@@ -24,6 +24,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -34,10 +41,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.libizo.CustomEditText;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,6 +71,10 @@ public class GroupChatActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference userRef, groupRef, groupMsgKeyRef;
     private StorageReference userProfileImageRef;
+
+
+    private RequestQueue mRequestQue;
+    private String URL = "https://fcm.googleapis.com/fcm/send";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,8 +140,6 @@ public class GroupChatActivity extends AppCompatActivity {
                     });
                 }
             });
-
-
 
 
         }
@@ -201,8 +214,62 @@ public class GroupChatActivity extends AppCompatActivity {
             msgInfoMap.put("date", currentDate);
             msgInfoMap.put("time", currentTime);
 
+            mRequestQue = Volley.newRequestQueue(this);
+            FirebaseMessaging.getInstance().subscribeToTopic("news");
+
             groupMsgKeyRef.updateChildren(msgInfoMap);
 
+            if(Helper.isAppForground(getApplicationContext()))
+                sendNotification(groupNameFrom, currentUserName + " : " + message);
+
+        }
+    }
+
+
+    private void sendNotification(String title, String body) {
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("to", "/topics/" + "news");
+            JSONObject notificationObj = new JSONObject();
+            notificationObj.put("title", title);
+            notificationObj.put("body", body);
+
+            JSONObject extraData = new JSONObject();
+            extraData.put("brandId", "puma");
+            extraData.put("category", "Shoes");
+
+
+            json.put("notification", notificationObj);
+            json.put("data", extraData);
+
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL,
+                    json,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            Log.d("MUR", "onResponse: ");
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("MUR", "onError: " + error.networkResponse);
+                }
+            }
+            ) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> header = new HashMap<>();
+                    header.put("content-type", "application/json");
+                    header.put("authorization", "key=AAAAm4DGmXs:APA91bFDcSqGPLb-doFgixxjj8jUxIqYJy4adWpBWGHZMumBm8yGvzZqpsXz9UvpGipYUgkbMXOIV6GHPXZSlVQTSBO8Qda46d065G1cAMfSoMx9GMUzoONfPGuKScjThL7EZRMx7PfM");
+                    return header;
+                }
+            };
+            mRequestQue.add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
