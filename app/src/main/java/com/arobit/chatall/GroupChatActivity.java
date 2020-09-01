@@ -7,9 +7,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -64,7 +67,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class GroupChatActivity extends AppCompatActivity {
 
     private ImageView gallery;
-    private ImageButton sendMessage;
+    private ImageView sendMessage;
     private CustomEditText inputGroupMsg;
     private TextView groupName;
     private String groupNameFrom, currentUserId, currentUserName, currentDate, currentTime;
@@ -74,6 +77,8 @@ public class GroupChatActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference userRef, groupRef, groupMsgKeyRef;
     private StorageReference userProfileImageRef;
+    private ConnectivityManager connectivityManager;
+    private ImageView back;
 
 
     private RequestQueue mRequestQue;
@@ -83,6 +88,10 @@ public class GroupChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat);
+
+
+        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
 
         methodRequiresTwoPermission();
         Intent intent = getIntent();
@@ -105,11 +114,25 @@ public class GroupChatActivity extends AppCompatActivity {
         gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(
-                        Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if (connectivityManager.getActiveNetworkInfo() != null && connectivityManager.
+                        getActiveNetworkInfo().isConnected()) {
+                    Intent i = new Intent(
+                            Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-                startActivityForResult(i, RESULT_LOAD_IMAGE);
+                    startActivityForResult(i, RESULT_LOAD_IMAGE);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please turn on your internet", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),GroupsActivity.class));
+                finish();
             }
         });
     }
@@ -128,6 +151,7 @@ public class GroupChatActivity extends AppCompatActivity {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
+            Toast.makeText(getApplicationContext(), "Please wait...", Toast.LENGTH_LONG).show();
             String currentImageID = getSaltString();
             final StorageReference filePath = userProfileImageRef.child(currentImageID + ".jpg");
             filePath.putFile(selectedImage).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -138,7 +162,7 @@ public class GroupChatActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             downloadUrl = uri.toString();
-                            Toast.makeText(getApplicationContext(), downloadUrl, Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(), downloadUrl, Toast.LENGTH_LONG).show();
                             sendMessageToDB(downloadUrl);
                         }
                     });
@@ -175,6 +199,7 @@ public class GroupChatActivity extends AppCompatActivity {
         inputGroupMsg = findViewById(R.id.input_group_msg);
         groupName = findViewById(R.id.group_name);
         gallery = findViewById(R.id.gallery);
+        back = findViewById(R.id.back);
 
     }
 
@@ -223,7 +248,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
             groupMsgKeyRef.updateChildren(msgInfoMap);
 
-            if(Helper.isAppForground(getApplicationContext()))
+            if (Helper.isAppForground(getApplicationContext()))
                 sendNotification(groupNameFrom, currentUserName + " : " + message);
 
         }
@@ -399,8 +424,6 @@ public class GroupChatActivity extends AppCompatActivity {
                     1, perms);
         }
     }
-
-
 
 
 }

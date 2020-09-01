@@ -5,9 +5,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -15,6 +18,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -51,6 +55,9 @@ public class SettingsActivity extends AppCompatActivity {
     private static int RESULT_LOAD_IMAGE = 1;
     private StorageReference userProfileImageRef;
     private String downloadUrl = null;
+    private ProgressBar progressBar;
+    private boolean connected;
+    private ConnectivityManager connectivityManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,17 +67,27 @@ public class SettingsActivity extends AppCompatActivity {
 
             methodRequiresTwoPermission();
             init();
-
             userInfo();
+
+            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo nInfo = cm.getActiveNetworkInfo();
+            connected = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
+
+            connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
 
             update.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    try {
-                        updateSettings();
-                    } catch (Exception e) {
-                        Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                    if (connectivityManager.getActiveNetworkInfo() != null && connectivityManager.
+                            getActiveNetworkInfo().isConnected()) {
+                        try {
+                            updateSettings();
+                        } catch (Exception e) {
+                            Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    } else
+                        Toast.makeText(getApplicationContext(), "Trun on your internet", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -78,11 +95,18 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    Intent i = new Intent(
-                            Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-                    startActivityForResult(i, RESULT_LOAD_IMAGE);
+                    if (connectivityManager.getActiveNetworkInfo() != null && connectivityManager.
+                            getActiveNetworkInfo().isConnected()) {
+                        Intent i = new Intent(
+                                Intent.ACTION_PICK,
+                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                        startActivityForResult(i, RESULT_LOAD_IMAGE);
+                        progressBar.setVisibility(View.VISIBLE);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please turn on your internet", Toast.LENGTH_LONG).show();
+                    }
                 }
             });
 
@@ -102,6 +126,7 @@ public class SettingsActivity extends AppCompatActivity {
         profileStatus = findViewById(R.id.status);
         username = findViewById(R.id.user_name);
         userProfileImage = findViewById(R.id.profile_image);
+        progressBar = findViewById(R.id.progress_ber);
     }
 
 
@@ -121,6 +146,8 @@ public class SettingsActivity extends AppCompatActivity {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
+            progressBar.setVisibility(View.VISIBLE);
+            Toast.makeText(getApplicationContext(), "Please wait...", Toast.LENGTH_LONG).show();
             userProfileImage.setImageBitmap(BitmapFactory.decodeFile(picturePath));
 
             final StorageReference filePath = userProfileImageRef.child(currentUserID + ".jpg");
@@ -128,14 +155,18 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "Profile image updated", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "Profile image updated", Toast.LENGTH_LONG).show();
 
                         //downloadUrl = task.getResult().getStorage().getDownloadUrl().toString();
                         filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
                                 downloadUrl = uri.toString();
-                                Toast.makeText(getApplicationContext(), downloadUrl, Toast.LENGTH_LONG).show();
+                                //Toast.makeText(getApplicationContext(), downloadUrl, Toast.LENGTH_LONG).show();
+                                progressBar.setVisibility(View.GONE);
+                                Toast.makeText(getApplicationContext(), "Press update to ready your DP...", Toast.LENGTH_LONG).show();
+
+
                             }
                         });
 
@@ -146,12 +177,15 @@ public class SettingsActivity extends AppCompatActivity {
             });
 
 
+        }else {
+            progressBar.setVisibility(View.GONE);
         }
     }
 
     private void userInfo() {
         DatabaseReference userInfo = rootRef.child("NewUsers").child(currentUserID);
         userInfo.keepSynced(true);
+        progressBar.setVisibility(View.VISIBLE);
         userInfo.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -168,10 +202,13 @@ public class SettingsActivity extends AppCompatActivity {
                         Glide.with(SettingsActivity.this)
                                 .load(image)
                                 .into(userProfileImage);
+                        progressBar.setVisibility(View.GONE);
 
 
                     } catch (Exception e) {
                         Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+
                     }
 
                 } else if ((snapshot.exists()) && (snapshot.hasChild("name"))) {

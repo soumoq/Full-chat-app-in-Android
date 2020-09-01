@@ -7,16 +7,31 @@
     tools:context=".SettingsActivity"
     android:orientation="vertical">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/profile_image"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:src="@drawable/ic_outline_account_circle_24"
-        app:civ_border_width="2dp"
-        android:layout_gravity="center"
-        app:civ_border_color="#FF000000"/>
+        android:layout_gravity="center">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/ic_outline_account_circle_24"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#FF000000"/>
+
+        <ProgressBar
+            android:id="@+id/progress_ber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
+
 
     <EditText
         android:id="@+id/user_name"
@@ -37,6 +52,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="#5499C7"
+        android:textColor="#ffffff"
         android:layout_marginTop="10dp"
         android:text="update"/>
 
