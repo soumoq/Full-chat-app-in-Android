@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
             init();
 
+
+
             logout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -109,62 +111,12 @@ public class MainActivity extends AppCompatActivity {
             });
 
 
+
+
         } catch (Exception e) {
             Toast.makeText(this, "1 Error: " + e, Toast.LENGTH_LONG).show();
         }
 
-    }
-
-
-    private void sendNotification() {
-
-        JSONObject json = new JSONObject();
-        try {
-            json.put("to","/topics/"+"news");
-            JSONObject notificationObj = new JSONObject();
-            notificationObj.put("title","My app");
-            notificationObj.put("body","my body");
-
-            JSONObject extraData = new JSONObject();
-            extraData.put("brandId","puma");
-            extraData.put("category","Shoes");
-
-
-
-            json.put("notification",notificationObj);
-            json.put("data",extraData);
-
-
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL,
-                    json,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-
-                            Log.d("MUR", "onResponse: ");
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("MUR", "onError: "+error.networkResponse);
-                }
-            }
-            ){
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String,String> header = new HashMap<>();
-                    header.put("content-type","application/json");
-                    header.put("authorization","key=AAAAm4DGmXs:APA91bFDcSqGPLb-doFgixxjj8jUxIqYJy4adWpBWGHZMumBm8yGvzZqpsXz9UvpGipYUgkbMXOIV6GHPXZSlVQTSBO8Qda46d065G1cAMfSoMx9GMUzoONfPGuKScjThL7EZRMx7PfM");
-                    return header;
-                }
-            };
-            mRequestQue.add(request);
-        }
-        catch (JSONException e)
-
-        {
-            e.printStackTrace();
-        }
     }
 
 
@@ -233,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        methodRequiresTwoPermission();
+        //methodRequiresTwoPermission();
         if (currentUser == null) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
@@ -244,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.child("name").exists()) {
-                        Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_LONG).show();
                     } else {
                         Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                         startActivity(intent);
@@ -258,6 +209,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        startActivity(new Intent(getApplicationContext(),GroupsActivity.class));
     }
 
     @Override

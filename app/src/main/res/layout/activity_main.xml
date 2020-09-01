@@ -19,6 +19,7 @@
         android:id="@+id/create_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:layout_marginTop="15dp"
         android:text="create group" />
 
@@ -27,6 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
+        android:visibility="gone"
         android:text="group" />
 
     <Button
@@ -48,6 +50,7 @@
     <Button
         android:id="@+id/settings"
         android:layout_width="wrap_content"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="settings" />
@@ -56,6 +59,7 @@
     <Button
         android:id="@+id/logout"
         android:layout_width="wrap_content"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="logout" />

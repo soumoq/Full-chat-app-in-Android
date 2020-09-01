@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
@@ -58,6 +59,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
+import pub.devrel.easypermissions.EasyPermissions;
+
 public class GroupChatActivity extends AppCompatActivity {
 
     private ImageView gallery;
@@ -81,6 +84,7 @@ public class GroupChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat);
 
+        methodRequiresTwoPermission();
         Intent intent = getIntent();
         groupNameFrom = intent.getStringExtra("groupName").toString();
 
@@ -378,17 +382,25 @@ public class GroupChatActivity extends AppCompatActivity {
     }
 
 
-    private void displayMessages(DataSnapshot snapshot) {
-        Iterator iterator = snapshot.getChildren().iterator();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
 
-
-        try {
-
-
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+    private void methodRequiresTwoPermission() {
+        String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            // Already have permission, do the thing
+            // ...
+        } else {
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, "Grant permission for read wright storage",
+                    1, perms);
         }
     }
+
+
 
 
 }

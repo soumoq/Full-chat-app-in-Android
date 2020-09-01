@@ -29,6 +29,7 @@ public class GroupsActivity extends AppCompatActivity {
     private ListView listView;
     private ArrayAdapter<String> arrayAdapter;
     private ArrayList<String> listGroup = new ArrayList<>();
+    private ImageView settings, logout;
 
     private DatabaseReference groupRef;
     private FirebaseAuth auth;
@@ -53,6 +54,24 @@ public class GroupsActivity extends AppCompatActivity {
             }
         });
 
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                auth.signOut();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
+
 
     }
 
@@ -64,6 +83,8 @@ public class GroupsActivity extends AppCompatActivity {
             listView = findViewById(R.id.list_view_g);
             arrayAdapter = new ArrayAdapter<String>(GroupsActivity.this, R.layout.support_simple_spinner_dropdown_item, listGroup);
             listView.setAdapter(arrayAdapter);
+            settings = findViewById(R.id.settings);
+            logout = findViewById(R.id.logout);
         } catch (Exception e) {
             Toast.makeText(this, "Error: " + e, Toast.LENGTH_LONG).show();
         }

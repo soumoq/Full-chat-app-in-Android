@@ -11,12 +11,14 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.libizo.CustomEditText;
 
 public class LoginActivity extends AppCompatActivity {
 
 
     private FirebaseAuth auth;
-    private EditText phone, name;
+    private EditText name;
+    CustomEditText phone;
     private Button sendOtp;
 
 
