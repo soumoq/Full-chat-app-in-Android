@@ -2,6 +2,7 @@ package com.arobit.chatall;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,6 +92,15 @@ public class MessageListView extends ArrayAdapter<String> {
                         Glide.with(getContext())
                                 .load(user_message.get(position))
                                 .into(userImage);
+                        userImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(rowView.getContext(),ImageViewActivity.class);
+                                intent.putExtra("user_image",user_message.get(position));
+                                intent.putExtra("user_name",user_name.get(position));
+                                rowView.getContext().startActivity(intent);
+                            }
+                        });
 
 
                     } catch (Exception e) {

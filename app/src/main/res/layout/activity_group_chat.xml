@@ -92,6 +92,7 @@
             android:layout_width="35dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
             android:src="@drawable/ic_baseline_send_24" />
 
     </LinearLayout>
