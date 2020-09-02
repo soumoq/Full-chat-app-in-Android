@@ -131,7 +131,7 @@ public class GroupChatActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(),GroupsActivity.class));
+                startActivity(new Intent(getApplicationContext(), GroupsActivity.class));
                 finish();
             }
         });
@@ -332,9 +332,11 @@ public class GroupChatActivity extends AppCompatActivity {
                         times.add(user_time);
 
 
+                        listView.setStackFromBottom(true);
+                        listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
                         adopter[0] = new MessageListView(GroupChatActivity.this, names, times, dates, messages);
                         listView.setAdapter(adopter[0]);
-                        // scrollMyListViewToBottom();
+                        scrollMyListViewToBottom();
 
 
                     }
@@ -380,13 +382,19 @@ public class GroupChatActivity extends AppCompatActivity {
             }
 
             private void scrollMyListViewToBottom() {
-                listView.post(new Runnable() {
+                /*listView.post(new Runnable() {
                     @Override
                     public void run() {
                         // Select the last row so it will scroll into view...
                         listView.setSelection(adopter[0].getCount() - 1);
                     }
-                });
+                });*/
+                listView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        listView.setSelection(adopter[0].getCount());
+                    }
+                }, 500);
             }
 
             @Override

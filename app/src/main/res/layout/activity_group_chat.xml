@@ -52,8 +52,7 @@
         android:divider="@null"
         android:listSelector="@android:color/transparent"
         android:scrollbars="vertical"
-        android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll" />
+        android:stackFromBottom="true" />
 
 
     <LinearLayout
