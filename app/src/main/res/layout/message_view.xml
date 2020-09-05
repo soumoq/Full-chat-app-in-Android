@@ -36,7 +36,8 @@
             android:id="@+id/user_img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:src="@drawable/ic_launcher_foreground"
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

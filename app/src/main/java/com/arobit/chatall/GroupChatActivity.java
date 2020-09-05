@@ -323,6 +323,7 @@ public class GroupChatActivity extends AppCompatActivity {
                     if (dataSnapshot.exists()) {
                         //displayMessages(snapshot);
 
+
                         Message message = dataSnapshot.getValue(Message.class);
                         String user_name = message.getName();
                         String user_date = message.getDate();
@@ -335,13 +336,15 @@ public class GroupChatActivity extends AppCompatActivity {
                         times.add(user_time);
 
 
-                        listView.setStackFromBottom(true);
-                        listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
-                        adopter[0] = new MessageListView(GroupChatActivity.this, names, times, dates, messages);
-                        listView.setAdapter(adopter[0]);
-                        scrollMyListViewToBottom();
+                        //listView.setStackFromBottom(true);
+                        //listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
+                        //adopter[0] = new MessageListView(GroupChatActivity.this, names, times, dates, messages);
+                        //listView.setAdapter(adopter[0]);
+                        //scrollMyListViewToBottom();
 
                         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+
                         adapter[0] = new MyRecyclerViewAdapter(getApplicationContext(), names, times, dates, messages);
                         //adapter[0].setClickListener(this);
                         recyclerView.setAdapter(adapter[0]);
@@ -360,34 +363,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     //displayMessages(snapshot);
 
-                    try {
-                        if (dataSnapshot.exists()) {
-                            //displayMessages(snapshot);
 
-                            Message message = (dataSnapshot.getValue(Message.class));
-                            String user_name = message.getName();
-                            String user_date = message.getDate();
-                            String user_time = message.getTime();
-                            String user_message = message.getMessage();
-
-                            names.add(user_name);
-                            dates.add(user_date);
-                            messages.add(user_message);
-                            times.add(user_time);
-
-
-                            listView.setStackFromBottom(true);
-                            listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
-                            adopter[0] = new MessageListView(GroupChatActivity.this, names, times, dates, messages);
-                            listView.setAdapter(adopter[0]);
-                            scrollMyListViewToBottom();
-
-
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(getApplicationContext(), "Error" + e.getMessage(), Toast.LENGTH_LONG).show();
-                        Log.e("Error: ", e + "");
-                    }
                 }
             }
 
