@@ -313,6 +313,9 @@ public class GroupChatActivity extends AppCompatActivity {
         final ListView listView = findViewById(R.id.list_view);
         final MessageListView[] adopter = new MessageListView[1];
 
+        final RecyclerView recyclerView = findViewById(R.id.rv);
+        final MyRecyclerViewAdapter[] adapter = new MyRecyclerViewAdapter[1];
+
         groupRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
@@ -320,7 +323,7 @@ public class GroupChatActivity extends AppCompatActivity {
                     if (dataSnapshot.exists()) {
                         //displayMessages(snapshot);
 
-                        Message message = (dataSnapshot.getValue(Message.class));
+                        Message message = dataSnapshot.getValue(Message.class);
                         String user_name = message.getName();
                         String user_date = message.getDate();
                         String user_time = message.getTime();
@@ -337,6 +340,11 @@ public class GroupChatActivity extends AppCompatActivity {
                         adopter[0] = new MessageListView(GroupChatActivity.this, names, times, dates, messages);
                         listView.setAdapter(adopter[0]);
                         scrollMyListViewToBottom();
+
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        adapter[0] = new MyRecyclerViewAdapter(getApplicationContext(), names, times, dates, messages);
+                        //adapter[0].setClickListener(this);
+                        recyclerView.setAdapter(adapter[0]);
 
 
                     }
@@ -368,9 +376,11 @@ public class GroupChatActivity extends AppCompatActivity {
                             times.add(user_time);
 
 
+                            listView.setStackFromBottom(true);
+                            listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
                             adopter[0] = new MessageListView(GroupChatActivity.this, names, times, dates, messages);
                             listView.setAdapter(adopter[0]);
-                            // scrollMyListViewToBottom();
+                            scrollMyListViewToBottom();
 
 
                         }
@@ -394,7 +404,7 @@ public class GroupChatActivity extends AppCompatActivity {
                     public void run() {
                         listView.setSelection(adopter[0].getCount());
                     }
-                }, 500);
+                }, 1000);
             }
 
             @Override

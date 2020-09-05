@@ -50,10 +50,10 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     String otp1 = otp.getText().toString();
-                    if (TextUtils.isEmpty(otp1) && otp1.length() < 6) {
-                        Toast.makeText(getApplicationContext(), "Enter 6 digit otp", Toast.LENGTH_LONG).show();
-                    } else
+                    if (otp1.length() == 6) {
                         verifyCode(otp1);
+                    } else
+                        Toast.makeText(getApplicationContext(), "Enter 6 digit otp", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -140,4 +140,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }

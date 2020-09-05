@@ -18,7 +18,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private EditText name;
-    CustomEditText phone;
+    private CustomEditText phone;
     private Button sendOtp;
 
 
@@ -37,10 +37,14 @@ public class LoginActivity extends AppCompatActivity {
                         String phoneNo = phone.getText().toString();
                         String fullName = name.getText().toString();
 
-                        Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-                        intent.putExtra("phone", "+91" + phoneNo);
-                        intent.putExtra("name", fullName);
-                        startActivity(intent);
+                        if (phoneNo.length() == 10) {
+                            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                            intent.putExtra("phone", "+91" + phoneNo);
+                            intent.putExtra("name", fullName);
+                            startActivity(intent);
+                        }else {
+                            Toast.makeText(getApplicationContext(),"Please enter a valid phone nunber",Toast.LENGTH_LONG).show();
+                        }
                     } catch (Exception e) {
                         Toast.makeText(getApplicationContext(), "2 Error: " + e, Toast.LENGTH_LONG).show();
                     }
@@ -61,5 +65,5 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
     }
-    
+
 }
