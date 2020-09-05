@@ -60,6 +60,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 import pub.devrel.easypermissions.EasyPermissions;
@@ -342,12 +343,14 @@ public class GroupChatActivity extends AppCompatActivity {
                         //listView.setAdapter(adopter[0]);
                         //scrollMyListViewToBottom();
 
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-
+                        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                        linearLayoutManager.setStackFromEnd(true);
+                        recyclerView.setLayoutManager(linearLayoutManager);
                         adapter[0] = new MyRecyclerViewAdapter(getApplicationContext(), names, times, dates, messages);
                         //adapter[0].setClickListener(this);
                         recyclerView.setAdapter(adapter[0]);
+                        recyclerView.smoothScrollToPosition(Objects.requireNonNull(recyclerView.getAdapter()).getItemCount());
+
 
 
                     }
