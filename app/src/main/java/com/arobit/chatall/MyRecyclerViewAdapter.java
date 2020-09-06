@@ -2,6 +2,7 @@ package com.arobit.chatall;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,12 +82,21 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 if (temp_name[0].equals(user_name.get(position))) {
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.msgBox.getLayoutParams();
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    holder.msgBox.setBackgroundResource(R.drawable.msg_box_you);
+                    holder.name.setText("You");
+                } else {
+                    if (position % 2 == 0){
+                        holder.name.setTextColor(Color.parseColor("#75c64e"));
+                    }else {
+                        holder.name.setTextColor(Color.parseColor("#c16967"));
+                    }
+                    holder.name.setText(user_name.get(position));
+
                 }
 
 
                 boolean isValid = URLUtil.isValidUrl(user_messages.get(position));
 
-                holder.name.setText(user_name.get(position));
                 holder.date.setText(user_dates.get(position));
                 holder.time.setText(user_time.get(position));
 

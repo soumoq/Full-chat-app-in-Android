@@ -100,8 +100,9 @@ public class GroupChatActivity extends AppCompatActivity {
 
         init();
         groupName.setText(groupNameFrom);
-
         getUserInfo();
+
+        inputGroupMsg.setBackgroundResource(android.R.color.transparent);
 
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
