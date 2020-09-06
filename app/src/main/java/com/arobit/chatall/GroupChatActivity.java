@@ -352,7 +352,6 @@ public class GroupChatActivity extends AppCompatActivity {
                         recyclerView.smoothScrollToPosition(Objects.requireNonNull(recyclerView.getAdapter()).getItemCount());
 
 
-
                     }
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(), "Error" + e.getMessage(), Toast.LENGTH_LONG).show();

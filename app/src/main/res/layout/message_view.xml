@@ -32,12 +32,23 @@
             android:textColor="#2C3E50"
             android:textSize="15sp" />
 
-        <ImageView
-            android:id="@+id/user_img"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_launcher_foreground"
-            android:visibility="gone"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/user_img"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_launcher_foreground"
+                android:visibility="gone"/>
+
+            <ProgressBar
+                android:id="@+id/progress_ber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
