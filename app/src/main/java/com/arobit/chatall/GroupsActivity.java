@@ -12,6 +12,7 @@ import android.widget.*;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -82,6 +83,18 @@ public class GroupsActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+        if (currentUser==null){
+            startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+            finish();
+        }
+    }
+
     private void allGroup() {
         AllGroupPopUp allGroupPopUp = new AllGroupPopUp();
         allGroupPopUp.show(getSupportFragmentManager(), "PopUpOtpVerification");
@@ -117,57 +130,65 @@ public class GroupsActivity extends AppCompatActivity {
                     set.add(((DataSnapshot) iterator.next()).getKey());
                 }
 
-
+                
                 DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                String currentUserID = auth.getCurrentUser().getUid();
-                DatabaseReference userInfo = rootRef.child("NewUsers").child(currentUserID);
-                userInfo.keepSynced(true);
-                userInfo.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        final String phoneNo;
-                        phoneNo = snapshot.child("phone").getValue().toString();
+                String currentUserID = null;
+                DatabaseReference userInfo = null;
+
+                try {
+                    currentUserID = auth.getCurrentUser().getUid();
+                    userInfo = rootRef.child("NewUsers").child(currentUserID);
+                    userInfo.keepSynced(true);
+                    userInfo.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            final String phoneNo;
+                            phoneNo = snapshot.child("phone").getValue().toString();
 
 
-                        int i;
-                        for (i = 0; i < set.size(); i++) {
-                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                                    .child("new_group").child(set.get(i));
-                            final int finalI = i;
-                            reference.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String groupPhoneNo = null;
-                                    String user_id = auth.getCurrentUser().getUid();
-                                    //Toast.makeText(getApplicationContext(), user_id, Toast.LENGTH_LONG).show();
-                                    if (snapshot.child(user_id).exists())
-                                        groupPhoneNo = snapshot.child(user_id).getValue().toString();
+                            int i;
+                            for (i = 0; i < set.size(); i++) {
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                                        .child("new_group").child(set.get(i));
+                                final int finalI = i;
+                                reference.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        String groupPhoneNo = null;
+                                        String user_id = auth.getCurrentUser().getUid();
+                                        //Toast.makeText(getApplicationContext(), user_id, Toast.LENGTH_LONG).show();
+                                        if (snapshot.child(user_id).exists())
+                                            groupPhoneNo = snapshot.child(user_id).getValue().toString();
 
-                                    if (phoneNo.equals(groupPhoneNo)) {
-                                        tempSet.add(set.get(finalI));
+                                        if (phoneNo.equals(groupPhoneNo)) {
+                                            tempSet.add(set.get(finalI));
+                                        }
+
+                                        listGroup.clear();
+                                        listGroup.addAll(tempSet);
+                                        arrayAdapter.notifyDataSetChanged();
+
                                     }
 
-                                    listGroup.clear();
-                                    listGroup.addAll(tempSet);
-                                    arrayAdapter.notifyDataSetChanged();
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                }
+                                    }
+                                });
+                            }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
 
-                                }
-                            });
                         }
 
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
+                        }
+                    });
+                }catch (Exception e){
+                    
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
 
 
             }

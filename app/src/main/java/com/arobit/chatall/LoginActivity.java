@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,8 +43,8 @@ public class LoginActivity extends AppCompatActivity {
                             intent.putExtra("phone", "+91" + phoneNo);
                             intent.putExtra("name", fullName);
                             startActivity(intent);
-                        }else {
-                            Toast.makeText(getApplicationContext(),"Please enter a valid phone nunber",Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Please enter a valid phone nunber", Toast.LENGTH_LONG).show();
                         }
                     } catch (Exception e) {
                         Toast.makeText(getApplicationContext(), "2 Error: " + e, Toast.LENGTH_LONG).show();
@@ -64,6 +65,31 @@ public class LoginActivity extends AppCompatActivity {
         sendOtp = findViewById(R.id.send_otp);
         auth = FirebaseAuth.getInstance();
 
+    }
+
+    boolean doubleBackToExitPressedOnce;
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+                Intent intent = new Intent(getApplicationContext(), ExitActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+
+            }
+        }, 2000);
     }
 
 }
