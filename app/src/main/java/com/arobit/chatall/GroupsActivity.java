@@ -184,11 +184,15 @@ public class GroupsActivity extends AppCompatActivity {
             @Override
             public void run() {
                 doubleBackToExitPressedOnce=false;
+                Intent intent = new Intent(getApplicationContext(),ExitActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
 
             }
         }, 2000);
     }
+
 
 
 
