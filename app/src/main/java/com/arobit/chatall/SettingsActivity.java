@@ -177,7 +177,7 @@ public class SettingsActivity extends AppCompatActivity {
             });
 
 
-        }else {
+        } else {
             progressBar.setVisibility(View.GONE);
         }
     }
@@ -185,7 +185,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void userInfo() {
         DatabaseReference userInfo = rootRef.child("NewUsers").child(currentUserID);
         userInfo.keepSynced(true);
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
         userInfo.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -199,10 +199,12 @@ public class SettingsActivity extends AppCompatActivity {
                     profileStatus.setText(status);
 
                     try {
-                        Glide.with(SettingsActivity.this)
-                                .load(image)
-                                .into(userProfileImage);
-                        progressBar.setVisibility(View.GONE);
+                        if (!image.equals("")) {
+                            Glide.with(SettingsActivity.this)
+                                    .load(image)
+                                    .into(userProfileImage);
+                            progressBar.setVisibility(View.GONE);
+                        }
 
 
                     } catch (Exception e) {
@@ -245,7 +247,10 @@ public class SettingsActivity extends AppCompatActivity {
             profileMap.put("uid", currentUserID);
             profileMap.put("name", name);
             profileMap.put("status", status);
-            profileMap.put("image", downloadUrl);
+            if (downloadUrl != null)
+                profileMap.put("image", downloadUrl);
+            else
+                profileMap.put("image", "");
 
             rootRef.child("NewUsers").child(currentUserID).updateChildren(profileMap)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
