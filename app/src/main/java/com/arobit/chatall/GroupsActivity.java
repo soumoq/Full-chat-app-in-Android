@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.*;
 import android.widget.Toast;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,7 +19,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -30,7 +28,7 @@ public class GroupsActivity extends AppCompatActivity {
     private ListView listView;
     private ArrayAdapter<String> arrayAdapter;
     private ArrayList<String> listGroup = new ArrayList<>();
-    private ImageView settings, logout;
+    private ImageView settings, logout, search;
 
     private DatabaseReference groupRef;
     private FirebaseAuth auth;
@@ -74,7 +72,19 @@ public class GroupsActivity extends AppCompatActivity {
             }
         });
 
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                allGroup();
+            }
+        });
 
+
+    }
+
+    private void allGroup() {
+        AllGroupPopUp allGroupPopUp = new AllGroupPopUp();
+        allGroupPopUp.show(getSupportFragmentManager(), "PopUpOtpVerification");
     }
 
     private void init() {
@@ -87,6 +97,7 @@ public class GroupsActivity extends AppCompatActivity {
             listView.setAdapter(arrayAdapter);
             settings = findViewById(R.id.settings);
             logout = findViewById(R.id.logout);
+            search = findViewById(R.id.search);
         } catch (Exception e) {
             Toast.makeText(this, "Error: " + e, Toast.LENGTH_LONG).show();
         }
@@ -183,8 +194,8 @@ public class GroupsActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
-                Intent intent = new Intent(getApplicationContext(),ExitActivity.class);
+                doubleBackToExitPressedOnce = false;
+                Intent intent = new Intent(getApplicationContext(), ExitActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
@@ -192,10 +203,6 @@ public class GroupsActivity extends AppCompatActivity {
             }
         }, 2000);
     }
-
-
-
-
 
 
 }
