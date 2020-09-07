@@ -3,6 +3,8 @@ package com.arobit.chatall;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,6 +46,9 @@ public class GroupsActivity extends AppCompatActivity {
 
         init();
         displayGroup();
+
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
