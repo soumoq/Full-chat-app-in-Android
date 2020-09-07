@@ -33,24 +33,30 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<String> user_name;
     private ArrayList<String> user_time;
     private ArrayList<String> user_dates;
     private ArrayList<String> user_messages;
+    private ArrayList<String> user_dp;
+
 
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
 
     // data is passed into the constructor
-    MyRecyclerViewAdapter(Context context, ArrayList<String> name, ArrayList<String> times, ArrayList<String> dates, ArrayList<String> messages) {
+    MyRecyclerViewAdapter(Context context, ArrayList<String> name, ArrayList<String> times, ArrayList<String> dates, ArrayList<String> messages, ArrayList<String> userDp) {
         this.mInflater = LayoutInflater.from(context);
         this.user_name = name;
         this.user_time = times;
         this.user_dates = dates;
         this.user_messages = messages;
+        this.user_dp = userDp;
+
 
     }
 
@@ -80,18 +86,21 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 temp_name[0] = snapshot.child("name").getValue().toString();
 
                 if (temp_name[0].equals(user_name.get(position))) {
+                    holder.profileImage.setVisibility(View.GONE);
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.msgBox.getLayoutParams();
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                     holder.msgBox.setBackgroundResource(R.drawable.msg_box_you);
                     holder.name.setText("You");
                 } else {
-                    if (position % 2 == 0){
+                    if (position % 2 == 0) {
                         holder.name.setTextColor(Color.parseColor("#75c64e"));
-                    }else {
+                    } else {
                         holder.name.setTextColor(Color.parseColor("#c16967"));
                     }
                     holder.name.setText(user_name.get(position));
-
+                    Glide.with(holder.profileImage.getContext())
+                            .load(user_dp.get(position))
+                            .into(holder.profileImage);
                 }
 
 
@@ -178,6 +187,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         private ImageView userImage;
         private LinearLayout msgBox;
         private ProgressBar progressBar;
+        private CircleImageView profileImage;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -189,6 +199,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             message = itemView.findViewById(R.id.message);
             msgBox = itemView.findViewById(R.id.message_box);
             progressBar = itemView.findViewById(R.id.progress_ber);
+            profileImage = itemView.findViewById(R.id.profile_image);
 
             itemView.setOnClickListener(this);
         }

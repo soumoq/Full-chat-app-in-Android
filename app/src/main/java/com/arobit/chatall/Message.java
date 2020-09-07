@@ -5,15 +5,17 @@ public class Message {
     private String message;
     private String name;
     private String time;
+    private String dp;
 
     private Message() {
     }
 
-    public Message(String date, String message, String name, String time) {
+    public Message(String date, String message, String name, String time, String dp) {
         this.date = date;
         this.message = message;
         this.name = name;
         this.time = time;
+        this.dp = dp;
     }
 
     public String getDate() {
@@ -46,5 +48,13 @@ public class Message {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getDp() {
+        return dp;
+    }
+
+    public void setDp(String dp) {
+        this.dp = dp;
     }
 }

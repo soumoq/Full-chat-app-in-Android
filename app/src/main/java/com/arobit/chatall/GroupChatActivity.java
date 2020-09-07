@@ -71,7 +71,7 @@ public class GroupChatActivity extends AppCompatActivity {
     private ImageView sendMessage;
     private CustomEditText inputGroupMsg;
     private TextView groupName;
-    private String groupNameFrom, currentUserId, currentUserName, currentDate, currentTime;
+    private String groupNameFrom, currentUserId, currentUserName, currentDate, currentTime, userDP = "";
     private String downloadUrl = null;
 
     private static int RESULT_LOAD_IMAGE = 1;
@@ -211,6 +211,8 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     currentUserName = snapshot.child("name").getValue().toString();
+                    userDP = snapshot.child("image").getValue().toString();
+
                 }
             }
 
@@ -244,6 +246,7 @@ public class GroupChatActivity extends AppCompatActivity {
             msgInfoMap.put("message", message);
             msgInfoMap.put("date", currentDate);
             msgInfoMap.put("time", currentTime);
+            msgInfoMap.put("dp",userDP);
 
             mRequestQue = Volley.newRequestQueue(this);
             FirebaseMessaging.getInstance().subscribeToTopic("news");
@@ -311,6 +314,8 @@ public class GroupChatActivity extends AppCompatActivity {
         final ArrayList<String> dates = new ArrayList<>();
         final ArrayList<String> messages = new ArrayList<>();
         final ArrayList<String> times = new ArrayList<>();
+        final ArrayList<String> userDp = new ArrayList<>();
+
 
         final ListView listView = findViewById(R.id.list_view);
         final MessageListView[] adopter = new MessageListView[1];
@@ -331,12 +336,15 @@ public class GroupChatActivity extends AppCompatActivity {
                         String user_date = message.getDate();
                         String user_time = message.getTime();
                         String user_message = message.getMessage();
+                        String dp = message.getDp();
 
                         names.add(user_name);
                         dates.add(user_date);
                         messages.add(user_message);
                         times.add(user_time);
+                        userDp.add(dp);
 
+                        //Toast.makeText(getApplicationContext(),dp,Toast.LENGTH_LONG).show();
 
                         //listView.setStackFromBottom(true);
                         //listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
@@ -347,7 +355,7 @@ public class GroupChatActivity extends AppCompatActivity {
                         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                         linearLayoutManager.setStackFromEnd(true);
                         recyclerView.setLayoutManager(linearLayoutManager);
-                        adapter[0] = new MyRecyclerViewAdapter(getApplicationContext(), names, times, dates, messages);
+                        adapter[0] = new MyRecyclerViewAdapter(getApplicationContext(), names, times, dates, messages,userDp);
                         //adapter[0].setClickListener(this);
                         recyclerView.setAdapter(adapter[0]);
                         recyclerView.smoothScrollToPosition(Objects.requireNonNull(recyclerView.getAdapter()).getItemCount());
