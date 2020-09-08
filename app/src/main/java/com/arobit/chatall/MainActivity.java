@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
     private Button chat, group, contact, logout, findFriend, settings, createGroup;
 
 
-
-
     private RequestQueue mRequestQue;
     private String URL = "https://fcm.googleapis.com/fcm/send";
 
@@ -62,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
             init();
-
 
 
             logout.setOnClickListener(new View.OnClickListener() {
@@ -91,10 +88,10 @@ public class MainActivity extends AppCompatActivity {
             });
 
 
-            if (getIntent().hasExtra("category")){
-                Intent intent = new Intent(MainActivity.this,GroupsActivity.class);
-                intent.putExtra("category",getIntent().getStringExtra("category"));
-                intent.putExtra("brandId",getIntent().getStringExtra("brandId"));
+            if (getIntent().hasExtra("category")) {
+                Intent intent = new Intent(MainActivity.this, GroupsActivity.class);
+                intent.putExtra("category", getIntent().getStringExtra("category"));
+                intent.putExtra("brandId", getIntent().getStringExtra("brandId"));
                 startActivity(intent);
             }
             mRequestQue = Volley.newRequestQueue(this);
@@ -111,14 +108,11 @@ public class MainActivity extends AppCompatActivity {
             });
 
 
-
-
         } catch (Exception e) {
             Toast.makeText(this, "1 Error: " + e, Toast.LENGTH_LONG).show();
         }
 
     }
-
 
 
     private void init() {
@@ -210,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        startActivity(new Intent(getApplicationContext(),GroupsActivity.class));
+        startActivity(new Intent(getApplicationContext(), GroupsActivity.class));
     }
 
     @Override

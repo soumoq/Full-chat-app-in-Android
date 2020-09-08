@@ -47,7 +47,7 @@ public class GroupsActivity extends AppCompatActivity {
         init();
         displayGroup();
 
-        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -94,8 +94,8 @@ public class GroupsActivity extends AppCompatActivity {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-        if (currentUser==null){
-            startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+        if (currentUser == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
     }
@@ -135,7 +135,7 @@ public class GroupsActivity extends AppCompatActivity {
                     set.add(((DataSnapshot) iterator.next()).getKey());
                 }
 
-                
+
                 DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
                 String currentUserID = null;
                 DatabaseReference userInfo = null;
@@ -190,10 +190,9 @@ public class GroupsActivity extends AppCompatActivity {
 
                         }
                     });
-                }catch (Exception e){
-                    
-                }
+                } catch (Exception e) {
 
+                }
 
 
             }

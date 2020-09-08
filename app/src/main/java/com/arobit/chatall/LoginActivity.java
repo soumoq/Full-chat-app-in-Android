@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     boolean doubleBackToExitPressedOnce;
+
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {

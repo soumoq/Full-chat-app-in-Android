@@ -95,9 +95,9 @@ public class MessageListView extends ArrayAdapter<String> {
                         userImage.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Intent intent = new Intent(rowView.getContext(),ImageViewActivity.class);
-                                intent.putExtra("user_image",user_message.get(position));
-                                intent.putExtra("user_name",user_name.get(position));
+                                Intent intent = new Intent(rowView.getContext(), ImageViewActivity.class);
+                                intent.putExtra("user_image", user_message.get(position));
+                                intent.putExtra("user_name", user_name.get(position));
                                 rowView.getContext().startActivity(intent);
                             }
                         });

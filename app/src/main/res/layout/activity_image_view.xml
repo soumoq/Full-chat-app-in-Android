@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ImageViewActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ImageViewActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,20 +17,20 @@
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
-            android:visibility="gone"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/ic_baseline_arrow_back_ios_24"/>
+            android:src="@drawable/ic_baseline_arrow_back_ios_24"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/sender_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sender name"
-            android:layout_marginLeft="10dp"
-            android:textColor="#ffffff"
             android:layout_gravity="center"
-            android:textSize="17sp"/>
+            android:layout_marginLeft="10dp"
+            android:text="Sender name"
+            android:textColor="#ffffff"
+            android:textSize="17sp" />
 
     </LinearLayout>
 
@@ -38,11 +38,10 @@
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_launcher_foreground"
         android:layout_centerInParent="true"
-        android:layout_marginTop="10dp"/>
-
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_launcher_foreground" />
 
 
 </LinearLayout>

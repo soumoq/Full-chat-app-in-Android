@@ -15,7 +15,7 @@ public class ReceiveNotificationActivity extends AppCompatActivity {
         TextView categotyTv = findViewById(R.id.category);
         TextView brandTv = findViewById(R.id.brand);
 
-        if (getIntent().hasExtra("category")){
+        if (getIntent().hasExtra("category")) {
             String category = getIntent().getStringExtra("category");
             String brand = getIntent().getStringExtra("brandId");
             categotyTv.setText(category);

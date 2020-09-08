@@ -246,7 +246,7 @@ public class GroupChatActivity extends AppCompatActivity {
             msgInfoMap.put("message", message);
             msgInfoMap.put("date", currentDate);
             msgInfoMap.put("time", currentTime);
-            msgInfoMap.put("dp",userDP);
+            msgInfoMap.put("dp", userDP);
 
             mRequestQue = Volley.newRequestQueue(this);
             FirebaseMessaging.getInstance().subscribeToTopic("news");
@@ -355,7 +355,7 @@ public class GroupChatActivity extends AppCompatActivity {
                         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                         linearLayoutManager.setStackFromEnd(true);
                         recyclerView.setLayoutManager(linearLayoutManager);
-                        adapter[0] = new MyRecyclerViewAdapter(getApplicationContext(), names, times, dates, messages,userDp);
+                        adapter[0] = new MyRecyclerViewAdapter(getApplicationContext(), names, times, dates, messages, userDp);
                         //adapter[0].setClickListener(this);
                         recyclerView.setAdapter(adapter[0]);
                         recyclerView.smoothScrollToPosition(Objects.requireNonNull(recyclerView.getAdapter()).getItemCount());

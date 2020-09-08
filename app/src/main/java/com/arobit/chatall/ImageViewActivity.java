@@ -33,8 +33,8 @@ public class ImageViewActivity extends AppCompatActivity {
             Glide.with(this)
                     .load(user_image)
                     .into(image);
-        }catch (Exception e){
-            Toast.makeText(getApplicationContext(),"Error: "+e,Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_LONG).show();
         }
 
     }
