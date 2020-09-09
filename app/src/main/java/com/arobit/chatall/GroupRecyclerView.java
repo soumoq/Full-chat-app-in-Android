@@ -17,12 +17,18 @@ public class GroupRecyclerView extends RecyclerView.Adapter<GroupRecyclerView.Pr
 
     private ArrayList<String> group_name;
     private ArrayList<String> last_name;
+    private ArrayList<String> last_message;
+    private ArrayList<String> last_time;
+
     private OnItemClickListener mListener;
 
 
-    public GroupRecyclerView(ArrayList<String> groupName, ArrayList<String> lastName) {
+    public GroupRecyclerView(ArrayList<String> groupName, ArrayList<String> lastName, ArrayList<String> lastMessage, ArrayList<String> lastTime) {
         this.group_name = groupName;
         this.last_name = lastName;
+        this.last_message = lastMessage;
+        this.last_time = lastTime;
+
     }
 
     public interface OnItemClickListener {
@@ -54,6 +60,8 @@ public class GroupRecyclerView extends RecyclerView.Adapter<GroupRecyclerView.Pr
         //holder.lastName.setText(lastName);
         holder.groupName.setText(group_name.get(position));
         holder.lastName.setText(last_name.get(position));
+        holder.lastTime.setText(last_time.get(position));
+        holder.lastMessage.setText(last_message.get(position));
 
         //holder.groupName.setText(group_name.get(position));
 
@@ -76,13 +84,15 @@ public class GroupRecyclerView extends RecyclerView.Adapter<GroupRecyclerView.Pr
 
     public class ProgrammingViewHolder extends RecyclerView.ViewHolder {
 
-        TextView lastName, groupName;
+        TextView lastName, groupName, lastMessage, lastTime;
 
         public ProgrammingViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
 
             lastName = itemView.findViewById(R.id.last_name);
             groupName = itemView.findViewById(R.id.group_name);
+            lastMessage = itemView.findViewById(R.id.last_message);
+            lastTime = itemView.findViewById(R.id.last_time);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

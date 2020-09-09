@@ -65,7 +65,6 @@ public class GroupsActivity extends AppCompatActivity {
         });
 
 
-
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -187,19 +186,24 @@ public class GroupsActivity extends AppCompatActivity {
                                         //listGroup.addAll(tempSet);
                                         //arrayAdapter.notifyDataSetChanged();
 
-                                        ArrayList <String> temp = new ArrayList<>();
-                                        for(String x: aList){
-                                            temp.add(x);
+                                        ArrayList<String> lastName = new ArrayList<>();
+                                        ArrayList<String> lastMessage = new ArrayList<>();
+                                        ArrayList<String> lastTime = new ArrayList<>();
+
+                                        for (String x : aList) {
+                                            lastName.add("soumo");
+                                            lastMessage.add("hi");
+                                            lastTime.add("09:20");
                                         }
 
-                                        GroupRecyclerView mAdapter = new GroupRecyclerView(aList,temp);
+
+                                        GroupRecyclerView mAdapter = new GroupRecyclerView(aList, lastName, lastMessage, lastTime);
                                         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                                         recyclerView.setAdapter(mAdapter);
-
                                         mAdapter.setOnItemClickListener(new GroupRecyclerView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(int position) {
-                                                Toast.makeText(getApplicationContext(),""+aList.get(position),Toast.LENGTH_LONG).show();
+                                                Toast.makeText(getApplicationContext(), "" + aList.get(position), Toast.LENGTH_LONG).show();
                                                 Intent intent = new Intent(getApplicationContext(), GroupChatActivity.class);
                                                 intent.putExtra("groupName", aList.get(position));
                                                 startActivity(intent);
