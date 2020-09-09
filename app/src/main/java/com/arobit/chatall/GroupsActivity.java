@@ -2,6 +2,8 @@ package com.arobit.chatall;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -24,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 public class GroupsActivity extends AppCompatActivity {
@@ -36,6 +39,7 @@ public class GroupsActivity extends AppCompatActivity {
     private DatabaseReference groupRef;
     private FirebaseAuth auth;
     private boolean doubleBackToExitPressedOnce = false;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,8 @@ public class GroupsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
 
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +122,7 @@ public class GroupsActivity extends AppCompatActivity {
             settings = findViewById(R.id.settings);
             logout = findViewById(R.id.logout);
             search = findViewById(R.id.search);
+            recyclerView = findViewById(R.id.recycler_view);
         } catch (Exception e) {
             Toast.makeText(this, "Error: " + e, Toast.LENGTH_LONG).show();
         }
@@ -169,9 +176,35 @@ public class GroupsActivity extends AppCompatActivity {
                                             tempSet.add(set.get(finalI));
                                         }
 
-                                        listGroup.clear();
-                                        listGroup.addAll(tempSet);
-                                        arrayAdapter.notifyDataSetChanged();
+
+                                        final ArrayList<String> aList = new ArrayList<String>();
+                                        for (String x : tempSet)
+                                            aList.add(x);
+
+
+                                        //Toast.makeText(getApplicationContext(), "" + aList, Toast.LENGTH_LONG).show();
+                                        //listGroup.clear();
+                                        //listGroup.addAll(tempSet);
+                                        //arrayAdapter.notifyDataSetChanged();
+
+                                        ArrayList <String> temp = new ArrayList<>();
+                                        for(String x: aList){
+                                            temp.add(x);
+                                        }
+
+                                        GroupRecyclerView mAdapter = new GroupRecyclerView(aList,temp);
+                                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                                        recyclerView.setAdapter(mAdapter);
+
+                                        mAdapter.setOnItemClickListener(new GroupRecyclerView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(int position) {
+                                                Toast.makeText(getApplicationContext(),""+aList.get(position),Toast.LENGTH_LONG).show();
+                                                Intent intent = new Intent(getApplicationContext(), GroupChatActivity.class);
+                                                intent.putExtra("groupName", aList.get(position));
+                                                startActivity(intent);
+                                            }
+                                        });
 
                                     }
 

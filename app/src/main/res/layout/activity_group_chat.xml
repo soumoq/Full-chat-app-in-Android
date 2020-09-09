@@ -35,7 +35,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/ic_outline_group_24"
+                android:src="@drawable/group"
                 app:civ_border_overlay="true"
                 app:civ_border_width="0dp"
                 app:civ_circle_background_color="#ffffff" />

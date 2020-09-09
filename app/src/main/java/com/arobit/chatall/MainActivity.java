@@ -190,6 +190,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.child("name").exists()) {
+                        startActivity(new Intent(getApplicationContext(), GroupsActivity.class));
+                        finish();
                     } else {
                         Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                         startActivity(intent);
