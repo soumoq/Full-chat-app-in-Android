@@ -202,6 +202,7 @@ public class SettingsActivity extends AppCompatActivity {
                         if (!image.equals("")) {
                             Glide.with(SettingsActivity.this)
                                     .load(image)
+                                    .error(R.drawable.ic_outline_account_circle_24)
                                     .into(userProfileImage);
                             progressBar.setVisibility(View.GONE);
                         }

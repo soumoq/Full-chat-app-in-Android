@@ -253,8 +253,9 @@ public class GroupChatActivity extends AppCompatActivity {
 
             groupMsgKeyRef.updateChildren(msgInfoMap);
 
-            if (Helper.isAppForground(getApplicationContext()))
+            if (Helper.isAppForground(getApplicationContext())) {
                 sendNotification(groupNameFrom, currentUserName + " : " + message);
+            }
 
         }
     }

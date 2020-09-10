@@ -100,6 +100,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                     holder.name.setText(user_name.get(position));
                     Glide.with(holder.profileImage.getContext())
                             .load(user_dp.get(position))
+                            .error(R.drawable.ic_outline_account_circle_24)
                             .into(holder.profileImage);
                 }
 
