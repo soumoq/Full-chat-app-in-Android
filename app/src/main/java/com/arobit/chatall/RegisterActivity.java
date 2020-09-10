@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.chaos.view.PinView;
@@ -33,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String verificationId;
     private DatabaseReference rootRef;
-
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void init() {
         mAuth = FirebaseAuth.getInstance();
         Intent intent = getIntent();
+        progressBar = findViewById(R.id.progress_ber);
         phone = intent.getStringExtra("phone");
         name = intent.getStringExtra("name");
         otp = findViewById(R.id.otp);
@@ -114,10 +116,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void verifyCode(String code) {
         try {
+            progressBar.setVisibility(View.VISIBLE);
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
             signInWithCredential(credential);
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_LONG).show();
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -136,6 +140,7 @@ public class RegisterActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else {
                     Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
                 }
             }
         });

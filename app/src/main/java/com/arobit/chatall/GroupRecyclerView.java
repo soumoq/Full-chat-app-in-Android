@@ -72,7 +72,7 @@ public class GroupRecyclerView extends RecyclerView.Adapter<GroupRecyclerView.Pr
             boolean isValid = URLUtil.isValidUrl(text);
 
             holder.lastName.setText(name);
-            holder.lastTime.setText(time.toLowerCase());
+            holder.lastTime.setText(time);
             if (isValid) {
                 holder.lastMessage.setVisibility(View.GONE);
                 holder.sentImage.setVisibility(View.VISIBLE);

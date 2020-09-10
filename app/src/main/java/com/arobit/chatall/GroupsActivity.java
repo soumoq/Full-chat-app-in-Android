@@ -322,7 +322,7 @@ public class GroupsActivity extends AppCompatActivity {
         }
 
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
 
@@ -335,7 +335,7 @@ public class GroupsActivity extends AppCompatActivity {
                 finish();
 
             }
-        }, 2000);
+        }, 40);
     }
 
 
