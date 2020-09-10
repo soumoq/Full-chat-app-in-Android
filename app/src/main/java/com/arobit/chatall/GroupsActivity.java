@@ -1,6 +1,7 @@
 package com.arobit.chatall;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,11 +18,15 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,6 +36,7 @@ import java.util.Set;
 
 public class GroupsActivity extends AppCompatActivity {
 
+    private TextView test;
     private ListView listView;
     private ArrayAdapter<String> arrayAdapter;
     private ArrayList<String> listGroup = new ArrayList<>();
@@ -112,6 +118,7 @@ public class GroupsActivity extends AppCompatActivity {
 
     private void init() {
         try {
+            test = findViewById(R.id.test);
             auth = FirebaseAuth.getInstance();
             groupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
             groupRef.keepSynced(true);
@@ -186,29 +193,97 @@ public class GroupsActivity extends AppCompatActivity {
                                         //listGroup.addAll(tempSet);
                                         //arrayAdapter.notifyDataSetChanged();
 
-                                        ArrayList<String> lastName = new ArrayList<>();
-                                        ArrayList<String> lastMessage = new ArrayList<>();
-                                        ArrayList<String> lastTime = new ArrayList<>();
+
+                                        final String[] lastName = new String[aList.size()];
+                                        final String[] lastMessage = new String[aList.size()];
+                                        final String[] lastTime = new String[aList.size()];
+
+                                        final ArrayList <String> lt = new ArrayList<>();
+                                        final ArrayList <String> ln = new ArrayList<>();
+                                        final ArrayList <String> lm = new ArrayList<>();
+
+
 
                                         for (String x : aList) {
-                                            lastName.add("soumo");
-                                            lastMessage.add("hi");
-                                            lastTime.add("09:20");
+                                            //lastName.add("soumo");
+                                            //lastMessage.add("hello");
+                                            //lastTime.add("12.30");
+
+                                            //DatabaseReference lastChatData;
+                                            //lastChatData = groupRef.child("Java");
+                                            //lastChatData.keepSynced(true);
+
+                                            Query lastQuery = groupRef.child(x).orderByKey().limitToLast(1);
+                                            lastQuery.addChildEventListener(new ChildEventListener() {
+                                                @Override
+                                                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                                                    try {
+                                                        if (snapshot.exists()) {
+
+                                                            lt.add(snapshot.child("time").getValue().toString());
+                                                            ln.add(snapshot.child("name").getValue().toString());
+                                                            lm.add(snapshot.child("message").getValue().toString());
+
+
+                                                            for(int j =0;j<lt.size();j++){
+                                                                lastTime[j] = lt.get(j);
+                                                                lastMessage[j] = lm.get(j);
+                                                                lastName[j] = ln.get(j);
+                                                            }
+
+
+
+                                                            //String data = snapshot.getValue().toString();
+
+                                                            GroupRecyclerView mAdapter = new GroupRecyclerView(aList, lastName, lastMessage, lastTime);
+                                                            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                                                            recyclerView.setAdapter(mAdapter);
+                                                            mAdapter.setOnItemClickListener(new GroupRecyclerView.OnItemClickListener() {
+                                                                @Override
+                                                                public void onItemClick(int position) {
+                                                                    //Toast.makeText(getApplicationContext(), "" + aList.get(position), Toast.LENGTH_LONG).show();
+                                                                    Intent intent = new Intent(getApplicationContext(), GroupChatActivity.class);
+                                                                    intent.putExtra("groupName", aList.get(position));
+                                                                    startActivity(intent);
+                                                                }
+                                                            });
+
+
+
+
+                                                        }
+                                                    } catch (Exception e) {
+                                                        test.setText("Error" + e.getMessage());
+                                                    }
+
+                                                }
+
+                                                @Override
+                                                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                                                }
+
+                                                @Override
+                                                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                                                }
+
+                                                @Override
+                                                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+
                                         }
 
 
-                                        GroupRecyclerView mAdapter = new GroupRecyclerView(aList, lastName, lastMessage, lastTime);
-                                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                                        recyclerView.setAdapter(mAdapter);
-                                        mAdapter.setOnItemClickListener(new GroupRecyclerView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(int position) {
-                                                Toast.makeText(getApplicationContext(), "" + aList.get(position), Toast.LENGTH_LONG).show();
-                                                Intent intent = new Intent(getApplicationContext(), GroupChatActivity.class);
-                                                intent.putExtra("groupName", aList.get(position));
-                                                startActivity(intent);
-                                            }
-                                        });
+                                        //Toast.makeText(getApplicationContext(), lastName.length + "", Toast.LENGTH_LONG).show();
+
 
                                     }
 

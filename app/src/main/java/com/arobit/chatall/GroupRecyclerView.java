@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,14 +17,14 @@ import java.util.Set;
 public class GroupRecyclerView extends RecyclerView.Adapter<GroupRecyclerView.ProgrammingViewHolder> {
 
     private ArrayList<String> group_name;
-    private ArrayList<String> last_name;
-    private ArrayList<String> last_message;
-    private ArrayList<String> last_time;
+    private String[] last_name;
+    private String[] last_message;
+    private String[] last_time;
 
     private OnItemClickListener mListener;
 
 
-    public GroupRecyclerView(ArrayList<String> groupName, ArrayList<String> lastName, ArrayList<String> lastMessage, ArrayList<String> lastTime) {
+    public GroupRecyclerView(ArrayList<String> groupName, String[] lastName, String[] lastMessage, String[] lastTime) {
         this.group_name = groupName;
         this.last_name = lastName;
         this.last_message = lastMessage;
@@ -40,15 +41,13 @@ public class GroupRecyclerView extends RecyclerView.Adapter<GroupRecyclerView.Pr
     }
 
 
-
-
     @NonNull
     @Override
     public ProgrammingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.groups_recycler_view, parent, false);
 
-        return new ProgrammingViewHolder(view,mListener);
+        return new ProgrammingViewHolder(view, mListener);
     }
 
 
@@ -59,9 +58,26 @@ public class GroupRecyclerView extends RecyclerView.Adapter<GroupRecyclerView.Pr
         //group_name =
         //holder.lastName.setText(lastName);
         holder.groupName.setText(group_name.get(position));
-        holder.lastName.setText(last_name.get(position));
-        holder.lastTime.setText(last_time.get(position));
-        holder.lastMessage.setText(last_message.get(position));
+
+        String name, time, text;
+
+        try {
+
+            name = last_name[position];
+            time = last_time[position];
+            text = last_message[position];
+
+
+
+            holder.lastName.setText(name);
+            holder.lastTime.setText(time);
+            holder.lastMessage.setText(text);
+
+
+        } catch (Exception e) {
+            Toast.makeText(holder.groupName.getContext(), "error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
 
         //holder.groupName.setText(group_name.get(position));
 
@@ -97,9 +113,9 @@ public class GroupRecyclerView extends RecyclerView.Adapter<GroupRecyclerView.Pr
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(listener != null){
+                    if (listener != null) {
                         int position = getAdapterPosition();
-                        if(position!= RecyclerView.NO_POSITION){
+                        if (position != RecyclerView.NO_POSITION) {
                             listener.onItemClick(position);
                         }
                     }
