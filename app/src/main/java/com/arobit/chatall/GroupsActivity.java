@@ -198,10 +198,9 @@ public class GroupsActivity extends AppCompatActivity {
                                         final String[] lastMessage = new String[aList.size()];
                                         final String[] lastTime = new String[aList.size()];
 
-                                        final ArrayList <String> lt = new ArrayList<>();
-                                        final ArrayList <String> ln = new ArrayList<>();
-                                        final ArrayList <String> lm = new ArrayList<>();
-
+                                        final ArrayList<String> lt = new ArrayList<>();
+                                        final ArrayList<String> ln = new ArrayList<>();
+                                        final ArrayList<String> lm = new ArrayList<>();
 
 
                                         for (String x : aList) {
@@ -214,6 +213,7 @@ public class GroupsActivity extends AppCompatActivity {
                                             //lastChatData.keepSynced(true);
 
                                             Query lastQuery = groupRef.child(x).orderByKey().limitToLast(1);
+                                            lastQuery.keepSynced(true);
                                             lastQuery.addChildEventListener(new ChildEventListener() {
                                                 @Override
                                                 public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -225,12 +225,11 @@ public class GroupsActivity extends AppCompatActivity {
                                                             lm.add(snapshot.child("message").getValue().toString());
 
 
-                                                            for(int j =0;j<lt.size();j++){
+                                                            for (int j = 0; j < lt.size(); j++) {
                                                                 lastTime[j] = lt.get(j);
                                                                 lastMessage[j] = lm.get(j);
                                                                 lastName[j] = ln.get(j);
                                                             }
-
 
 
                                                             //String data = snapshot.getValue().toString();
@@ -247,8 +246,6 @@ public class GroupsActivity extends AppCompatActivity {
                                                                     startActivity(intent);
                                                                 }
                                                             });
-
-
 
 
                                                         }

@@ -50,6 +50,14 @@
                    android:layout_height="wrap_content"
                    android:text="Last message"
                    android:textColor="@color/blue"/>
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_baseline_image_24"
+                    android:layout_gravity="center"/>
            </LinearLayout>
 
        </LinearLayout>

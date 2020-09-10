@@ -3,7 +3,9 @@ package com.arobit.chatall;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,11 +69,17 @@ public class GroupRecyclerView extends RecyclerView.Adapter<GroupRecyclerView.Pr
             time = last_time[position];
             text = last_message[position];
 
-
+            boolean isValid = URLUtil.isValidUrl(text);
 
             holder.lastName.setText(name);
-            holder.lastTime.setText(time);
-            holder.lastMessage.setText(text);
+            holder.lastTime.setText(time.toLowerCase());
+            if (isValid) {
+                holder.lastMessage.setVisibility(View.GONE);
+                holder.sentImage.setVisibility(View.VISIBLE);
+            } else {
+                holder.lastMessage.setText(text);
+                holder.sentImage.setVisibility(View.GONE);
+            }
 
 
         } catch (Exception e) {
@@ -101,6 +109,7 @@ public class GroupRecyclerView extends RecyclerView.Adapter<GroupRecyclerView.Pr
     public class ProgrammingViewHolder extends RecyclerView.ViewHolder {
 
         TextView lastName, groupName, lastMessage, lastTime;
+        ImageView sentImage;
 
         public ProgrammingViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
@@ -109,6 +118,7 @@ public class GroupRecyclerView extends RecyclerView.Adapter<GroupRecyclerView.Pr
             groupName = itemView.findViewById(R.id.group_name);
             lastMessage = itemView.findViewById(R.id.last_message);
             lastTime = itemView.findViewById(R.id.last_time);
+            sentImage = itemView.findViewById(R.id.image);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
