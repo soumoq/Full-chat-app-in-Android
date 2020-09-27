@@ -5,3 +5,13 @@ kind of group and are able to chat with another user. Users can set their  profi
 user also shares image through this app. The chat will be saved offline. Notification feature included
 in this app. Firebase Storage used to store images, Firebase Realtime Database is the backend
 database and Firebase Authentication used to authenticate the user via OTP.
+
+Database : Firebase Realtime Database\
+Authentication : Firebase Authentication\
+Storage : Firebase Storage\
+
+
+![Image](home.jpg)
+![Image](chat.jpg)
+![Image](image.jpg)
+![Image](profile.jpg)
